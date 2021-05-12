@@ -1,1 +1,10 @@
-- Make Frame
+- Make Frame (Done)
+
+- Draw snake.
+- Spawn apples at random places while not on snake.
+- Make death conditions.
+  - Snake runs into wall?
+  - Snake runs into itself?
+- Make snake grow when it eats apple.
+- Keep track of score.
+- Play finished game (Final Task)
