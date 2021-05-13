@@ -1,4 +1,8 @@
-const gameState = {}
+const gameState = {
+    snake: {
+        direction: 0,     // 0:up, 1:right, 2:down, 3:left
+    }
+}
 
 var config = {
     type: Phaser.AUTO,
@@ -11,7 +15,7 @@ var config = {
     },
     backgroundColor: '#333333',
     fps: {
-        target: 1,
+        target: 5,
         forceSetTimeOut: true
     },
     physics: {
@@ -39,17 +43,54 @@ function create() {
     eastWall.setOrigin(0,0)
     var northWall = this.add.sprite(0, 0, 'horizontal-wall')
     northWall.setOrigin(0,0)
-    var head = this.add.sprite(0, 0, 'head')
-    head.setOrigin(0,0)
-    var body = this.add.sprite(0, 0, 'body')
-    body.setOrigin(0,0)
+    gameState.snake.head = this.add.sprite(150, 150, 'head')
+    gameState.snake.head.setOrigin(0,0)
 
-    this.physics.collider('head', 'vertical-wall')
-    this.physics.collider('head', 'horizontal-wall')
+    gameState.snake.body = []
+    for (var y=160; y<190; y+=10 ) {
+        body = this.add.sprite(150, y, 'body')
+        body.setOrigin(0,0)
+        gameState.snake.body.push(body )
+    }
+
+    gameState.cursors = this.input.keyboard.createCursorKeys()
+
 }
 
 function update() {
+    // check keyboard, if pressed
+    if (gameState.cursors.up.isDown) {
+        gameState.snake.direction = 0
+    }
 
+    if (gameState.cursors.right.isDown) {
+        gameState.snake.direction = 1
+    }
+
+    if (gameState.cursors.down.isDown) {
+        gameState.snake.direction = 2
+    }
+
+    if (gameState.cursors.left.isDown) {
+        gameState.snake.direction = 3
+    }
+
+    // Draw Snake by moving coordinate
+    if (gameState.snake.direction == 0) {
+        gameState.snake.head.y -= 10
+    }
+
+    if (gameState.snake.direction == 1) {
+        gameState.snake.head.x += 10
+    }
+
+    if (gameState.snake.direction == 2) {
+        gameState.snake.head.y += 10
+    }
+
+    if (gameState.snake.direction == 3) {
+        gameState.snake.head.x -= 10
+    }
 }
 
 var game = new Phaser.Game(config);
