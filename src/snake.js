@@ -69,24 +69,43 @@ function create() {
 
 }
 
+function moveSnake() {
+    // Save old-head (x,y) to pass for the first body's new (x,y).
+    let oldX = gameState.snake.head.x
+    let oldY = gameState.snake.head.y
+
+    // Move Head
+    if (gameState.snake.direction == 0) {
+        gameState.snake.head.y -= 10
+    }
+
+    if (gameState.snake.direction == 1) {
+        gameState.snake.head.x += 10
+    }
+
+    if (gameState.snake.direction == 2) {
+        gameState.snake.head.y += 10
+    }
+
+    if (gameState.snake.direction == 3) {
+        gameState.snake.head.x -= 10
+    }
+
+    // Using saved (x,y), shift all body's (x,y) one by one
+    for (let i=0; i< gameState.snake.body.length; i++) {
+        curBody = gameState.snake.body[i]
+        
+        curBody.x = oldX
+        curBody.y = oldY
+
+        
+    }
+}
+
 function update() {
     if (gameState.frameRefresh < 0) {
         // Draw Snake by moving coordinate
-        if (gameState.snake.direction == 0) {
-            gameState.snake.head.y -= 10
-        }
-
-        if (gameState.snake.direction == 1) {
-            gameState.snake.head.x += 10
-        }
-
-        if (gameState.snake.direction == 2) {
-            gameState.snake.head.y += 10
-        }
-
-        if (gameState.snake.direction == 3) {
-            gameState.snake.head.x -= 10
-        }
+        moveSnake()
 
         // Reset frameRefresh counter
         gameState.frameRefresh = gameState.frameDelay
