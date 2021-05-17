@@ -1,9 +1,9 @@
 - Make Frame (Done)
 - Draw snake. (Done)
 - Set snake direction by keyboard (0,1,2,3) (Done)
+- Add sounds into game. (Done)
+- Make snake move. (Done)
 
-- Add sounds into game.
-- Make snake move.
 - Spawn apples at random places while not on snake.
 - Make death conditions.
   - Snake runs into wall?

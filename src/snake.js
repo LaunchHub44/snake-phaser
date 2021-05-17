@@ -4,7 +4,8 @@ const gameState = {
     },
 
     frameDelay: 10,
-    frameRefresh: 0
+    frameRefresh: 0,
+    paused: false
 }
 
 var config = {
@@ -42,6 +43,26 @@ function preload() {
     this.load.audio('apple', '../audio/apple.mp3')
 }
 
+function spawnApple(scene) {
+    var x = Math.floor(Math.random() * 29) * 10
+    var y = Math.floor(Math.random() * 29) * 10
+    gameState.apple = scene.add.sprite(x,y, 'head')
+    gameState.apple.setOrigin(0,0)
+
+    //console.log(x,  y)
+}
+
+function eatApple() {
+    if (gameState.snake.head.x == gameState.apple.x  &&
+        gameState.snake.head.y == gameState.apple.y ) {
+        
+        // do something
+
+        return true
+    }
+    return false
+}
+
 function create() {
     var westWall = this.add.sprite(0, 0, 'vertical-wall')
     westWall.setOrigin(0, 0)
@@ -54,9 +75,14 @@ function create() {
     gameState.snake.head = this.add.sprite(150, 150, 'head')
     gameState.snake.head.setOrigin(0, 0)
 
+    // Initial apple
+    spawnApple(this)
+
     gameState.music = this.sound.add('bgm')
     gameState.music.loop = true     // To loop
     gameState.music.play()
+
+    gameState.appleSound = this.sound.add('apple')
 
     gameState.snake.body = []
     for (var y = 160; y < 190; y += 10) {
@@ -90,15 +116,26 @@ function moveSnake() {
     if (gameState.snake.direction == 3) {
         gameState.snake.head.x -= 10
     }
+        
+    //console.log(gameState.snake.head.x,  gameState.snake.head.y)
+
+    // If snake ate apple, sound.
+    if (eatApple()) {
+        gameState.appleSound.play()
+    }
 
     // Using saved (x,y), shift all body's (x,y) one by one
     for (let i=0; i< gameState.snake.body.length; i++) {
         curBody = gameState.snake.body[i]
         
+        let x = curBody.x
+        let y = curBody.y
+
         curBody.x = oldX
         curBody.y = oldY
 
-        
+        oldX = x
+        oldY = y
     }
 }
 
@@ -128,6 +165,16 @@ function update() {
             gameState.snake.direction = 3
         }
 
+        // Debug only
+        if (gameState.cursors.space.isDown) {
+            if (gameState.paused) {
+                gameState.paused = false
+                this.scene.resume()
+            } else {
+                gameState.paused = true
+                this.scene.pause()
+            }
+        }
         // Reduce frameRefresh counter.
         --gameState.frameRefresh;
     }
