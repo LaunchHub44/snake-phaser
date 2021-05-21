@@ -64,6 +64,8 @@ function eatApple() {
 }
 
 function create() {
+    gameState.snakeGrow = false
+
     var westWall = this.add.sprite(0, 0, 'vertical-wall')
     westWall.setOrigin(0, 0)
     var southWall = this.add.sprite(0, 290, 'horizontal-wall')
@@ -95,7 +97,7 @@ function create() {
 
 }
 
-function moveSnake() {
+function moveSnake(scene, grow) {
     // Save old-head (x,y) to pass for the first body's new (x,y).
     let oldX = gameState.snake.head.x
     let oldY = gameState.snake.head.y
@@ -122,6 +124,9 @@ function moveSnake() {
     // If snake ate apple, sound.
     if (eatApple()) {
         gameState.appleSound.play()
+        gameState.apple.destroy()
+        gameState.snakeGrow = true
+        spawnApple(scene)
     }
 
     // Using saved (x,y), shift all body's (x,y) one by one
@@ -137,12 +142,19 @@ function moveSnake() {
         oldX = x
         oldY = y
     }
+
+    if (gameState.snakeGrow) {
+        let new_body = scene.add.sprite(oldX, oldY, 'body')
+        new_body.setOrigin(0,0)
+        gameState.snake.body.push(new_body)
+        gameState.snakeGrow = false
+    }
 }
 
 function update() {
     if (gameState.frameRefresh < 0) {
         // Draw Snake by moving coordinate
-        moveSnake()
+        moveSnake(this)
 
         // Reset frameRefresh counter
         gameState.frameRefresh = gameState.frameDelay
