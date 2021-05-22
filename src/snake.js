@@ -1,9 +1,11 @@
 const gameState = {
     snake: {
         direction: 0,     // 0:up, 1:right, 2:down, 3:left
+        head: null,
+        body: []
     },
 
-    frameDelay: 10,
+    frameDelay: 5,
     frameRefresh: 0,
     paused: false
 }
@@ -43,10 +45,37 @@ function preload() {
     this.load.audio('apple', '../audio/apple.mp3')
 }
 
+// Recursive Function:
+//    Very difficult concept!
+function getUniqueXY() {
+    let rtn = {
+        x: Math.floor(Math.random() * 27) * 10 + 10,
+        y: Math.floor(Math.random() * 27) * 10 + 10
+    }
+
+    // Validation 1:
+    if (rtn.x == gameState.snake.head.x && rtn.y == gameState.snake.head.y) {
+        // Bad Thing happened!
+        //   New apple spawned on the Snake's head
+        console.log("Apple on Snake's head ")
+        return getUniqueXY()
+    }
+
+    // Validation 2:
+    for (let i=0; i<gameState.snake.body.length; ++i) {
+        if (rtn.x == gameState.snake.body[i].x && rtn.y == gameState.snake.body[i].y) {
+            // Bad Thing happened!
+            //   New apple spawned on the Snake's body
+            console.log("Apple on Snake's body ")
+            return getUniqueXY()
+        }
+    }
+    return rtn
+}
+
 function spawnApple(scene) {
-    var x = Math.floor(Math.random() * 29) * 10
-    var y = Math.floor(Math.random() * 29) * 10
-    gameState.apple = scene.add.sprite(x,y, 'head')
+    let xy = getUniqueXY()
+    gameState.apple = scene.add.sprite(xy.x, xy.y, 'head')
     gameState.apple.setOrigin(0,0)
 
     //console.log(x,  y)
@@ -85,8 +114,6 @@ function create() {
     gameState.music.play()
 
     gameState.appleSound = this.sound.add('apple')
-
-    gameState.snake.body = []
     for (var y = 160; y < 190; y += 10) {
         body = this.add.sprite(150, y, 'body')
         body.setOrigin(0, 0)
@@ -161,19 +188,19 @@ function update() {
     }
     else {
         // check keyboard, if pressed
-        if (gameState.cursors.up.isDown) {
+        if (gameState.snake.direction != 2 && gameState.cursors.up.isDown) {
             gameState.snake.direction = 0
         }
 
-        if (gameState.cursors.right.isDown) {
+        if (gameState.snake.direction != 3 && gameState.cursors.right.isDown) {
             gameState.snake.direction = 1
         }
 
-        if (gameState.cursors.down.isDown) {
+        if (gameState.snake.direction != 0 && gameState.cursors.down.isDown) {
             gameState.snake.direction = 2
         }
 
-        if (gameState.cursors.left.isDown) {
+        if (gameState.snake.direction != 1 && gameState.cursors.left.isDown) {
             gameState.snake.direction = 3
         }
 

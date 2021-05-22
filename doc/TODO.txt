@@ -3,11 +3,12 @@
 - Set snake direction by keyboard (0,1,2,3) (Done)
 - Add sounds into game. (Done)
 - Make snake move. (Done)
+- Make snake grow when it eats apple. (Done)
+- Stop snake from moving backward. (Done)
+- Spawn apples at random places while not on snake. (Done)
 
-- Spawn apples at random places while not on snake.
 - Make death conditions.
   - Snake runs into wall?
   - Snake runs into itself?
-- Make snake grow when it eats apple.
 - Keep track of score.
 - Play finished game (Final Task)
