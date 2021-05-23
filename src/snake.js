@@ -7,13 +7,14 @@ const gameState = {
 
     frameDelay: 5,
     frameRefresh: 0,
-    paused: false
+    paused: false,
+    score: 0
 }
 
 var config = {
     type: Phaser.AUTO,
     width: 300,
-    height: 300,
+    height: 330,
     scene: {
         preload: preload,
         create: create,
@@ -105,6 +106,7 @@ function create() {
     northWall.setOrigin(0, 0)
     gameState.snake.head = this.add.sprite(150, 150, 'head')
     gameState.snake.head.setOrigin(0, 0)
+    gameState.scoreText = this.add.text(115, 305, `Score: ${gameState.score}`)
 
     // Initial apple
     spawnApple(this)
@@ -120,8 +122,17 @@ function create() {
         gameState.snake.body.push(body)
     }
 
+    gameState.deadSound = this.sound.add('dead')
+
     gameState.cursors = this.input.keyboard.createCursorKeys()
 
+}
+
+function snakeDied(scene) {
+    gameState.deadSound.play()
+    gameState.music.stop()
+    gameState.appleSound.stop()
+    scene.physics.pause()
 }
 
 function moveSnake(scene, grow) {
@@ -153,6 +164,8 @@ function moveSnake(scene, grow) {
         gameState.appleSound.play()
         gameState.apple.destroy()
         gameState.snakeGrow = true
+        gameState.score += 1
+        gameState.scoreText.setText(`Score: ${gameState.score}`)
         spawnApple(scene)
     }
 
@@ -216,6 +229,19 @@ function update() {
         }
         // Reduce frameRefresh counter.
         --gameState.frameRefresh;
+    }
+
+    if (gameState.snake.head.x < 0  || gameState.snake.head.x > 290 ||
+        gameState.snake.head.y < 0 || gameState.snake.head.y > 290) {
+            snakeDied()
+    }
+
+    // Find if head bit body.
+    for (var i = 0; i < gameState.snake.body.length; i++) {
+        if (gameState.snake.head.x == gameState.snake.body[i].x &&
+            gameState.snake.head.y == gameState.snake.body[i].y) {
+                snakeDied()
+        }
     }
 }
 

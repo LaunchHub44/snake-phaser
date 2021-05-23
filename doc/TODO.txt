@@ -6,9 +6,9 @@
 - Make snake grow when it eats apple. (Done)
 - Stop snake from moving backward. (Done)
 - Spawn apples at random places while not on snake. (Done)
+- Make death conditions. (Complete)
+  - Snake runs into wall? (Done)
+  - Snake runs into itself? (Done)
+- Keep track of score. (Done)
 
-- Make death conditions.
-  - Snake runs into wall?
-  - Snake runs into itself?
-- Keep track of score.
 - Play finished game (Final Task)
